@@ -17,7 +17,6 @@ void CompileToCache(
     const std::string &js_filename,
     const std::string &output_filename,
     v8::Isolate*,
-    v8::Platform*,
     v8::Local<v8::Context> &context)
 {
     std::string raw_code = dejsc::IO::read_file(js_filename);
@@ -46,7 +45,7 @@ void RunBytecodeCache(const std::string &cache_filename)
 }
 
 
-int RunJavaScriptCode(const std::string &jscode, v8::Isolate* isolate, v8::Platform* platform)
+int RunJavaScriptCode(const std::string &jscode, v8::Isolate* isolate)
 {
     // Execute argument given to -e option directly.
     v8::Local<v8::String> file_name =
@@ -59,12 +58,15 @@ int RunJavaScriptCode(const std::string &jscode, v8::Isolate* isolate, v8::Platf
         return 1;
     }
     bool success = dejsc::Shell::ExecuteString(isolate, source, file_name, false, true);
-    while (v8::platform::PumpMessageLoop(platform, isolate)) continue;
-    if (!success) return 1;
+    //while (v8::platform::PumpMessageLoop(platform, isolate)) continue;
+    if (!success)
+        return 1;
+    else
+        return 0;
 }
 
 
-int RunJavaScriptFile(const std::string &js_filename, v8::Isolate* isolate, v8::Platform* platform)
+int RunJavaScriptFile(const std::string &js_filename, v8::Isolate* isolate)
 {
     std::string raw_code = dejsc::IO::read_file(js_filename);
     // Use all other arguments as names of files to load and run.
@@ -77,20 +79,18 @@ int RunJavaScriptFile(const std::string &js_filename, v8::Isolate* isolate, v8::
         fprintf(stderr, "Error reading '%s'\n", js_filename.c_str());
     }
     bool success = dejsc::Shell::ExecuteString(isolate, source, file_name, false, true);
-    while (v8::platform::PumpMessageLoop(platform, isolate)) continue;
-    if (!success) return 1;
+    //while (v8::platform::PumpMessageLoop(platform, isolate)) continue;
+    if (!success)
+        return 1;
+    else
+        return 0;
 }
 
 
 int RunInV8(
-    std::function<int (v8::Isolate*, v8::Platform*, v8::Local<v8::Context>&) > callback,
+    std::function<int (v8::Isolate*, v8::Local<v8::Context>&) > callback,
     bool use_shell_context /*= false*/)
 {
-    // Initialize V8.
-    std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
-    v8::V8::InitializePlatform(platform.get());
-    v8::V8::Initialize();
-
     v8::Isolate::CreateParams create_params;
     create_params.array_buffer_allocator =
         v8::ArrayBuffer::Allocator::NewDefaultAllocator();
@@ -115,16 +115,12 @@ int RunInV8(
         v8::Context::Scope context_scope(context);
 
         // Run given function in the environment that has been set up.
-        result = callback(isolate, platform.get(), context);
+        result = callback(isolate, context);
     }
 
     // Dispose the isolate
     isolate->Dispose();
     delete create_params.array_buffer_allocator;
-
-    // Tear down V8.
-    v8::V8::Dispose();
-    v8::V8::ShutdownPlatform();
 
     return result;
 }
