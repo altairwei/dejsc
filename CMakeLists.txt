@@ -25,9 +25,13 @@ conan_basic_setup()
 set(SOURCES
     src/main.cpp
     src/utils.cpp
+    src/shell.cpp
+    src/runner.cpp
 )
 set(HEADERS
     src/utils.h
+    src/shell.h
+    src/runner.h
 )
 
 add_executable(dejsc ${HEADERS} ${SOURCES})

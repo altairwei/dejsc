@@ -29,6 +29,21 @@ std::string read_file(const std::string &filename)
     return read_file(filename.c_str());
 }
 
+std::vector<uint8_t> read_binary(const std::string &filename)
+{
+    std::ifstream in(filename, std::ios::in | std::ios::binary);
+    if (in)
+    {
+        std::vector<uint8_t> data (
+            (std::istreambuf_iterator<char>(in)),
+            std::istreambuf_iterator<char>()
+        );
+
+        return data;
+    }
+    throw(errno);
+}
+
 void write_file(const std::string &filename, const char *data, const int length)
 {
     auto outputfile = std::fstream(filename, std::ios::out | std::ios::binary);
@@ -36,7 +51,7 @@ void write_file(const std::string &filename, const char *data, const int length)
     outputfile.close();
 }
 
-} // IO
+} // namespace IO
 
 namespace StringUtil {
 
@@ -48,6 +63,6 @@ std::string remove_filename_ext(const std::string &filename)
     return filename.substr(0, lastdot); 
 }
 
-} // StringUtil
+} // namespace StringUtil
 
-} // dejsc
+} // namespace dejsc
