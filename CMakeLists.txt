@@ -22,7 +22,13 @@ endif()
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-set(SOURCES src/main.cpp)
+set(SOURCES
+    src/main.cpp
+    src/utils.cpp
+)
+set(HEADERS
+    src/utils.h
+)
 
-add_executable(dejsc ${SOURCES})
+add_executable(dejsc ${HEADERS} ${SOURCES})
 target_link_libraries(dejsc ${CONAN_LIBS})
