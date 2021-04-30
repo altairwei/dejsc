@@ -10,6 +10,7 @@ class CachedCode : public v8::internal::SerializedData {
 
 public:
     CachedCode(v8::internal::ScriptData* data);
+    CachedCode(v8::ScriptCompiler::CachedData* data);
 
     // The data header consists of uint32_t-sized entries:
     // [0] magic number and (internally provided) external reference count
@@ -32,6 +33,7 @@ public:
     uint32_t GetFlagsHash();
     uint32_t GetPayloadLength();
     uint32_t GetChecksum();
+    v8::internal::Vector<const v8::internal::byte> Payload() const;
 
     void PrintHeaderInfo();
 };

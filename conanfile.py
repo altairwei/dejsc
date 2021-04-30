@@ -74,7 +74,6 @@ class V8TestConan(ConanFile):
             "use_custom_libcxx = false",
             "use_custom_libcxx_for_host = false",
             "use_glib = false",
-            "use_sysroot = false",
 
             # V8 specific settings
             "v8_monolithic = true",
@@ -82,6 +81,11 @@ class V8TestConan(ConanFile):
             "v8_use_external_startup_data = false",
             #"v8_enable_backtrace = false",
         ]
+
+        if tools.os_info.is_linux or tools.os_info.is_macos:
+            gen_arguments += [
+                "use_sysroot = false"
+            ]
 
         return gen_arguments
 

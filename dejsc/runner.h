@@ -18,9 +18,9 @@ void CompileToCache(
     v8::Local<v8::Context> &context
 );
 
-int RunBytecodeCache(const std::string &cache_filename, v8::Isolate* isolate);
-int RunJavaScriptFile(const std::string &js_filename, v8::Isolate* isolate);
-int RunJavaScriptCode(const std::string &jscode, v8::Isolate* isolate);
+int RunBytecodeCache(const std::string &cache_filename, v8::Isolate* isolate, v8::Local<v8::Context>& context);
+int RunJavaScriptFile(const std::string &js_filename, v8::Isolate* isolate, v8::Local<v8::Context>& context);
+int RunJavaScriptCode(const std::string &jscode, v8::Isolate* isolate, v8::Local<v8::Context>& context);
 
 
 int RunInV8(
