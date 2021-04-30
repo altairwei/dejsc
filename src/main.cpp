@@ -50,11 +50,18 @@ int main(int argc, char* argv[]) {
         }, true);
     });
 
+    CLI::App* shell_subapp = app.add_subcommand("shell", "Enter a simple v8 shell.");
+    shell_subapp->callback([&]() {
+        dejsc::Runner::RunInV8([&](v8::Isolate* isolate, v8::Local<v8::Context> &context) -> int {
+            dejsc::Shell::RunShell(context, dejsc::Runner::gDefaultPlatform.get());
+            return 0;
+        }, true);
+    });
+
     // Initialize V8.
     v8::V8::InitializeICUDefaultLocation(argv[0]);
     v8::V8::InitializeExternalStartupData(argv[0]);
-    std::unique_ptr<v8::Platform> platform = v8::platform::NewDefaultPlatform();
-    v8::V8::InitializePlatform(platform.get());
+    v8::V8::InitializePlatform(dejsc::Runner::gDefaultPlatform.get());
     v8::V8::Initialize();
 
     CLI11_PARSE(app, argc, argv);

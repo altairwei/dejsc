@@ -9,6 +9,8 @@
 namespace dejsc {
 namespace Runner {
 
+extern std::unique_ptr<v8::Platform> gDefaultPlatform;
+
 void CompileToCache(
     const std::string &js_filename,
     const std::string &output_filename,

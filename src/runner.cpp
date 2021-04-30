@@ -13,6 +13,8 @@ static inline v8::Local<v8::String> v8_str(const char* x) {
 namespace dejsc {
 namespace Runner {
 
+std::unique_ptr<v8::Platform> gDefaultPlatform = v8::platform::NewDefaultPlatform();
+
 void CompileToCache(
     const std::string &js_filename,
     const std::string &output_filename,
@@ -58,7 +60,7 @@ int RunJavaScriptCode(const std::string &jscode, v8::Isolate* isolate)
         return 1;
     }
     bool success = dejsc::Shell::ExecuteString(isolate, source, file_name, false, true);
-    //while (v8::platform::PumpMessageLoop(platform, isolate)) continue;
+    while (v8::platform::PumpMessageLoop(gDefaultPlatform.get(), isolate)) continue;
     if (!success)
         return 1;
     else
@@ -79,7 +81,7 @@ int RunJavaScriptFile(const std::string &js_filename, v8::Isolate* isolate)
         fprintf(stderr, "Error reading '%s'\n", js_filename.c_str());
     }
     bool success = dejsc::Shell::ExecuteString(isolate, source, file_name, false, true);
-    //while (v8::platform::PumpMessageLoop(platform, isolate)) continue;
+    while (v8::platform::PumpMessageLoop(gDefaultPlatform.get(), isolate)) continue;
     if (!success)
         return 1;
     else
