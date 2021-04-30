@@ -4,6 +4,7 @@
 
 #include "utils.h"
 #include "shell.h"
+#include "cache.h"
 
 static inline v8::Local<v8::String> v8_str(const char* x);
 static inline v8::Local<v8::String> v8_str(const char* x) {
@@ -50,13 +51,8 @@ int RunBytecodeCache(const std::string &cache_filename, v8::Isolate* isolate)
     v8::internal::ScriptData cache(raw.data(), raw.size());
     uint32_t source_length = jscode.length();
 
-    v8::internal::SerializedCodeData::SanityCheckResult sanity_check_result =
-        v8::internal::SerializedCodeData::CHECK_SUCCESS;
-    v8::internal::SerializedCodeData scd = v8::internal::SerializedCodeData::FromCachedData(
-        &cache, source_length, &sanity_check_result);
-    if (sanity_check_result != v8::internal::SerializedCodeData::CHECK_SUCCESS) {
-        std::cout << "[Cached code failed check]" << std::endl;
-    }
+    Cache::CachedCode cached_code(&cache);
+    cached_code.PrintHeaderInfo();
 
     return 0;
 }

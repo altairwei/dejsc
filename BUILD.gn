@@ -4986,6 +4986,8 @@ v8_executable("dejsc") {
     "src/dejsc/shell.h",
     "src/dejsc/utils.cpp",
     "src/dejsc/utils.h",
+    "src/dejsc/cache.cpp",
+    "src/dejsc/cache.h",
   ]
 
   configs = [

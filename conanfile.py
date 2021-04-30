@@ -108,3 +108,9 @@ class V8TestConan(ConanFile):
         self.copy("*.dll", dst="bin", src="bin")
         self.copy("*.dylib*", dst="bin", src="lib")
         self.copy('*.so*', dst='bin', src='lib')
+
+    def package(self):
+        if self.settings.os == "Windows":
+            self.copy(pattern="dejsc.exe", dst="bin", keep_path=False)
+        else:
+            self.copy(pattern="dejsc", dst="bin", keep_path=False)
