@@ -3,8 +3,8 @@
 
 #include <functional>
 
-#include "v8/include/libplatform/libplatform.h"
-#include "v8/include/v8.h"
+#include "include/libplatform/libplatform.h"
+#include "include/v8.h"
 
 namespace dejsc {
 namespace Runner {
@@ -18,7 +18,7 @@ void CompileToCache(
     v8::Local<v8::Context> &context
 );
 
-void RunBytecodeCache(const std::string &cache_filename);
+int RunBytecodeCache(const std::string &cache_filename, v8::Isolate* isolate);
 int RunJavaScriptFile(const std::string &js_filename, v8::Isolate* isolate);
 int RunJavaScriptCode(const std::string &jscode, v8::Isolate* isolate);
 

@@ -1,5 +1,7 @@
 #include "runner.h"
 
+#include "src/snapshot/code-serializer.h"
+
 #include "utils.h"
 #include "shell.h"
 
@@ -39,11 +41,24 @@ void CompileToCache(
 }
 
 
-void RunBytecodeCache(const std::string &cache_filename)
+int RunBytecodeCache(const std::string &cache_filename, v8::Isolate* isolate)
 {
     std::vector<uint8_t> raw = dejsc::IO::read_binary(cache_filename);
-    v8::ScriptCompiler::CachedData cache(raw.data(), raw.size());
+    std::string js_file = dejsc::StringUtil::remove_filename_ext(cache_filename) + ".js";
+    std::string jscode = dejsc::IO::read_file(js_file);
 
+    v8::internal::ScriptData cache(raw.data(), raw.size());
+    uint32_t source_length = jscode.length();
+
+    v8::internal::SerializedCodeData::SanityCheckResult sanity_check_result =
+        v8::internal::SerializedCodeData::CHECK_SUCCESS;
+    v8::internal::SerializedCodeData scd = v8::internal::SerializedCodeData::FromCachedData(
+        &cache, source_length, &sanity_check_result);
+    if (sanity_check_result != v8::internal::SerializedCodeData::CHECK_SUCCESS) {
+        std::cout << "[Cached code failed check]" << std::endl;
+    }
+
+    return 0;
 }
 
 

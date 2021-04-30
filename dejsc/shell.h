@@ -1,8 +1,8 @@
 #ifndef SRC_SHELL_H
 #define SRC_SHELL_H
 
-#include "v8/include/v8.h"
-#include "v8/include/libplatform/libplatform.h"
+#include "include/v8.h"
+#include "include/libplatform/libplatform.h"
 
 namespace dejsc {
 namespace Shell {

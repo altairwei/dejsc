@@ -2,10 +2,10 @@
 #include <fstream>
 #include <cstdint>
 
-#include "CLI/CLI.hpp"
+#include "third_party/CLI11/CLI11.hpp"
 
-#include "v8/include/libplatform/libplatform.h"
-#include "v8/include/v8.h"
+#include "include/libplatform/libplatform.h"
+#include "include/v8.h"
 
 #include "utils.h"
 #include "shell.h"
@@ -31,21 +31,20 @@ int main(int argc, char* argv[]) {
         }, false);
     });
 
-    std::string js_cache_filename;
     std::string jscode;
-    bool use_cache;
+    std::string cache_filename;
     CLI::App* run_subapp = app.add_subcommand("run", "Run JavaScript or v8 bytenode cache file.");
-    run_subapp->add_option("-f,--file", js_cache_filename, "JavaScript or cache file.");
-    run_subapp->add_option("-c,--cache", js_cache_filename, "Use v8 bytenode cache file.");
+    run_subapp->add_option("-f,--file", js_filename, "JavaScript or cache file.");
+    run_subapp->add_option("-c,--cache", cache_filename, "Use v8 bytenode cache file.");
     run_subapp->add_option("-e,--execute", jscode, "Execute argument given to -e option directly.");
     run_subapp->callback([&]() {
         dejsc::Runner::RunInV8([&](v8::Isolate* isolate, v8::Local<v8::Context> &context) -> int {
-            if (!js_cache_filename.empty()) {
-                return dejsc::Runner::RunJavaScriptFile(js_cache_filename, isolate);
+            if (!js_filename.empty()) {
+                return dejsc::Runner::RunJavaScriptFile(js_filename, isolate);
             } else if (!jscode.empty()) {
                 return dejsc::Runner::RunJavaScriptCode(jscode, isolate);
-            } else {
-                return 0;
+            } else if (!cache_filename.empty()) {
+                return dejsc::Runner::RunBytecodeCache(cache_filename, isolate);
             }
         }, true);
     });
