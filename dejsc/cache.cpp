@@ -1,9 +1,19 @@
 #include "cache.h"
 
+#include "utils.h"
+
 namespace dejsc {
 namespace Cache {
 
 using namespace v8::internal;
+
+CachedCode::CachedCode(const std::string &cache_filename)
+{
+    m_raw = dejsc::IO::read_binary(cache_filename);
+    data_ = m_raw.data();
+    size_ = m_raw.size();
+    owns_data_ = false;
+}
 
 
 CachedCode::CachedCode(ScriptData* data)
@@ -51,6 +61,21 @@ Vector<const byte> CachedCode::Payload() const
   int length = GetHeaderValue(kPayloadLengthOffset);
   DCHECK_EQ(data_ + size_, payload + length);
   return Vector<const byte>(payload, length);
+}
+
+
+std::unique_ptr<ScriptData> CachedCode::GetScriptData()
+{
+    DCHECK(owns_data_);
+    return std::make_unique<ScriptData>(data_, size_);
+}
+
+
+std::unique_ptr<v8::ScriptCompiler::CachedData> CachedCode::GetCachedData()
+{
+    DCHECK(owns_data_);
+    return std::make_unique<v8::ScriptCompiler::CachedData>(
+        data_, size_, v8::ScriptCompiler::CachedData::BufferNotOwned);
 }
 
 

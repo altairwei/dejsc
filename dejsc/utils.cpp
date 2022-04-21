@@ -63,6 +63,13 @@ std::string remove_filename_ext(const std::string &filename)
     return filename.substr(0, lastdot); 
 }
 
+
+v8::Local<v8::String> v8_str(const char* x) {
+  return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), x,
+                                 v8::NewStringType::kNormal)
+      .ToLocalChecked();
+}
+
 } // namespace StringUtil
 
 } // namespace dejsc

@@ -106,7 +106,7 @@ class V8TestConan(ConanFile):
 
             print(generator_call)
             self.run(generator_call)
-            self.run("ninja -C {folder} dejsc".format(folder=self.build_folder))
+            self.run("ninja -C {folder} dejsc d8".format(folder=self.build_folder))
 
     def imports(self):
         self.copy("*.dll", dst="bin", src="bin")
@@ -116,5 +116,7 @@ class V8TestConan(ConanFile):
     def package(self):
         if self.settings.os == "Windows":
             self.copy(pattern="dejsc.exe", dst="bin", keep_path=False)
+            self.copy(pattern="d8.exe", dst="bin", keep_path=False)
         else:
             self.copy(pattern="dejsc", dst="bin", keep_path=False)
+            self.copy(pattern="d8", dst="bin", keep_path=False)

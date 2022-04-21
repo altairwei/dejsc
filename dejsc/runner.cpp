@@ -9,12 +9,6 @@
 #include "shell.h"
 #include "cache.h"
 
-static inline v8::Local<v8::String> v8_str(const char* x);
-static inline v8::Local<v8::String> v8_str(const char* x) {
-  return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), x,
-                                 v8::NewStringType::kNormal)
-      .ToLocalChecked();
-}
 
 namespace dejsc {
 namespace Runner {
@@ -64,8 +58,8 @@ void CompileToCache(
     v8::ScriptCompiler::CachedData* cache;
 
     {
-        v8::Local<v8::String> source_string = v8_str(raw_code.c_str());
-        v8::ScriptOrigin script_origin(v8_str(js_filename.c_str()));
+        v8::Local<v8::String> source_string = StringUtil::v8_str(raw_code.c_str());
+        v8::ScriptOrigin script_origin(StringUtil::v8_str(js_filename.c_str()));
         v8::ScriptCompiler::Source source(source_string, script_origin);
         v8::ScriptCompiler::CompileOptions option =
             v8::ScriptCompiler::kNoCompileOptions;
@@ -80,15 +74,12 @@ void CompileToCache(
 
 int RunBytecodeCache(const std::string &cache_filename, v8::Isolate* isolate, v8::Local<v8::Context>& context)
 {
-    std::vector<uint8_t> raw = dejsc::IO::read_binary(cache_filename);
-    v8::ScriptCompiler::CachedData cache(raw.data(), raw.size());
+    Cache::CachedCode cache(cache_filename);
 
-    Cache::CachedCode cached_code(&cache);
-
-    std::string fake_source(' ', cached_code.GetSourceHash());
-    v8::Local<v8::String> source_string = v8_str(fake_source.c_str());
-    v8::ScriptOrigin script_origin(v8_str(cache_filename.c_str()));
-    v8::ScriptCompiler::Source source_obj(source_string, script_origin, &cache);
+    std::string fake_source(' ', cache.GetSourceHash());
+    v8::Local<v8::String> source_string = StringUtil::v8_str(fake_source.c_str());
+    v8::ScriptOrigin script_origin(StringUtil::v8_str(cache_filename.c_str()));
+    v8::ScriptCompiler::Source source_obj(source_string, script_origin, cache.GetCachedData().get());
     v8::ScriptCompiler::CompileOptions option = v8::ScriptCompiler::kConsumeCodeCache;
 
     v8::Local<v8::Script> script;

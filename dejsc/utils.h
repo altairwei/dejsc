@@ -5,6 +5,8 @@
 #include <vector>
 #include <cstdint>
 
+#include "include/v8.h"
+
 namespace dejsc {
 
 namespace IO {
@@ -21,6 +23,7 @@ void write_file(const std::string &filename, const char *data, const int length)
 namespace StringUtil {
 
 std::string remove_filename_ext(const std::string &filename);
+v8::Local<v8::String> v8_str(const char* x);
 
 } // namespace StringUtil
 

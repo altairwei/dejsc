@@ -1,7 +1,12 @@
 #ifndef DEJSC_CACHE_H
 #define DEJSC_CACHE_H
 
+#include <string>
+#include <vector>
+#include <memory>
+
 #include "src/snapshot/code-serializer.h"
+#include "include/v8.h"
 
 namespace dejsc {
 namespace Cache {
@@ -9,6 +14,7 @@ namespace Cache {
 class CachedCode : public v8::internal::SerializedData {
 
 public:
+    CachedCode(const std::string &cache_filename);
     CachedCode(v8::internal::ScriptData* data);
     CachedCode(v8::ScriptCompiler::CachedData* data);
 
@@ -35,7 +41,15 @@ public:
     uint32_t GetChecksum();
     v8::internal::Vector<const v8::internal::byte> Payload() const;
 
+    // Return ScriptData object and the ownership unchanged.
+    std::unique_ptr<v8::internal::ScriptData> GetScriptData();
+    // Return CachedData object and the ownership unchanged.
+    std::unique_ptr<v8::ScriptCompiler::CachedData> GetCachedData();
+
     void PrintHeaderInfo();
+
+private:
+    std::vector<uint8_t> m_raw;
 };
 
 
