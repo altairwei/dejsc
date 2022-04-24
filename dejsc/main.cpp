@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cstdint>
 
-#include "third_party/CLI11/CLI11.hpp"
+#include <CLI11/CLI11.hpp>
 
 #include "include/libplatform/libplatform.h"
 #include "include/v8.h"

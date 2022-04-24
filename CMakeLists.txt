@@ -22,6 +22,8 @@ endif()
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
+include_directories("dejsc/3rdparty/")
+
 set(SOURCES
     src/main.cpp
     src/utils.cpp
