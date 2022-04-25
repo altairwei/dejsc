@@ -3,38 +3,39 @@ project(PackageTest CXX)
 
 list(APPEND CMAKE_MODULE_PATH 
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/3rdparty/v8-cmake/cmake"
 )
 
-option(CONAN_INSTALL_MANUALLY "Run Conan install command manually." OFF)
-
-if(NOT CONAN_INSTALL_MANUALLY)
-    include(conan)
-    conan_check(REQUIRED)
-    conan_cmake_run(
-        CONANFILE conanfile.py
-        INSTALL_FOLDER ${CMAKE_BINARY_DIR}
-        BUILD_TYPE ${CMAKE_BUILD_TYPE}
-        BUILD missing
-    )
-    include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
-endif()
-
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-
-include_directories("src/3rdparty/")
-
-set(SOURCES
+set(DEJSC_SOURCES
     src/main.cpp
     src/utils.cpp
     src/shell.cpp
     src/runner.cpp
 )
-set(HEADERS
+
+set(DEJSC_HEADERS
     src/utils.h
     src/shell.h
     src/runner.h
 )
 
-add_executable(dejsc ${HEADERS} ${SOURCES})
-target_link_libraries(dejsc ${CONAN_LIBS})
+add_subdirectory("src/3rdparty/v8-cmake/")
+include_directories("src/3rdparty/v8-cmake/v8/")
+include_directories("src/3rdparty/")
+
+add_executable(dejsc ${DEJSC_SOURCES} ${DEJSC_HEADERS})
+
+target_include_directories(dejsc
+  PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/3rdparty/v8-cmake/v8/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  PRIVATE
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/3rdparty/v8-cmake/v8>
+)
+
+target_link_libraries(dejsc
+  PRIVATE
+    v8_base_without_compiler
+)
+
+set_target_properties(dejsc PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
