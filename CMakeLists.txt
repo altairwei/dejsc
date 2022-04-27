@@ -3,7 +3,6 @@ project(PackageTest CXX)
 
 list(APPEND CMAKE_MODULE_PATH 
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/3rdparty/v8-cmake/cmake"
 )
 
 set(DEJSC_SOURCES
@@ -21,21 +20,21 @@ set(DEJSC_HEADERS
 
 add_subdirectory("src/3rdparty/v8-cmake/")
 include_directories("src/3rdparty/v8-cmake/v8/")
+include_directories("src/3rdparty/v8-cmake/v8/include")
 include_directories("src/3rdparty/")
 
-add_executable(dejsc ${DEJSC_SOURCES} ${DEJSC_HEADERS})
+# Workaroun bug https://gitlab.kitware.com/cmake/cmake/-/issues/18399
+cmake_policy(SET CMP0118 NEW)
 
-target_include_directories(dejsc
-  PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/3rdparty/v8-cmake/v8/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-  PRIVATE
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/3rdparty/v8-cmake/v8>
-)
+add_executable(dejsc ${DEJSC_SOURCES} ${DEJSC_HEADERS})
 
 target_link_libraries(dejsc
   PRIVATE
     v8_base_without_compiler
+    v8_compiler
+    v8_snapshot
+    v8_inspector
+    v8_libplatform
 )
 
 set_target_properties(dejsc PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
