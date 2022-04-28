@@ -5,6 +5,8 @@
 #include <v8/src/handles/maybe-handles.h>
 #include <v8/include/v8.h>
 
+#include "cache.h"
+
 namespace dejsc {
 namespace Deserializer {
 

@@ -1,7 +1,6 @@
 #include "deserializer.h"
 
 #include "runner.h"
-#include "cache.h"
 #include "utils.h"
 
 namespace dejsc {
@@ -20,7 +19,7 @@ MaybeHandle<SharedFunctionInfo> DeserializeCacheData(Cache::CachedCode &data)
                                         ->NewStringFromUtf8(CStrVector(fake_source.c_str()))
                                         .ToHandleChecked();
         info = CodeSerializer::Deserialize(
-            iso, data.GetScriptData(), orig_source, v8::ScriptCompiler::kNoCompileOptions);
+            iso, data.GetScriptData().get(), orig_source, v8::ScriptCompiler::kNoCompileOptions);
         return 0;
     });
 
