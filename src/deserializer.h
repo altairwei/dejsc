@@ -1,9 +1,9 @@
 #ifndef DEJSC_DESERIALIZER_H
 #define DEJSC_DESERIALIZER_H
 
-#include "src/snapshot/code-serializer.h"
-#include "src/handles/maybe-handles.h"
-#include "include/v8.h"
+#include <v8/src/snapshot/code-serializer.h>
+#include <v8/src/handles/maybe-handles.h>
+#include <v8/include/v8.h>
 
 namespace dejsc {
 namespace Deserializer {

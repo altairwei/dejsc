@@ -5,7 +5,7 @@
 #include <vector>
 #include <cstdint>
 
-#include "include/v8.h"
+#include <v8/include/v8.h>
 
 namespace dejsc {
 

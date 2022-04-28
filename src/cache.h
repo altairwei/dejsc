@@ -5,8 +5,8 @@
 #include <vector>
 #include <memory>
 
-#include "src/snapshot/code-serializer.h"
-#include "include/v8.h"
+#include <v8/src/snapshot/code-serializer.h>
+#include <v8/include/v8.h>
 
 namespace dejsc {
 namespace Cache {

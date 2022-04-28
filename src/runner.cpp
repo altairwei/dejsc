@@ -1,9 +1,9 @@
 #include "runner.h"
 
-#include "src/snapshot/code-serializer.h"
-#include "src/objects/shared-function-info.h"
-#include "src/handles/handles.h"
-#include "src/codegen/compiler.h"
+#include <v8/src/snapshot/code-serializer.h>
+#include <v8/src/objects/shared-function-info.h>
+#include <v8/src/handles/handles.h>
+#include <v8/src/codegen/compiler.h>
 
 #include "utils.h"
 #include "shell.h"

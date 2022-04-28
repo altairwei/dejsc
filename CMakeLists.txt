@@ -19,8 +19,7 @@ set(DEJSC_HEADERS
 )
 
 add_subdirectory("src/3rdparty/v8-cmake/")
-include_directories("src/3rdparty/v8-cmake/v8/")
-include_directories("src/3rdparty/v8-cmake/v8/include")
+include_directories("src/3rdparty/v8-cmake/")
 include_directories("src/3rdparty/")
 
 # Workaroun bug https://gitlab.kitware.com/cmake/cmake/-/issues/18399

@@ -3,9 +3,8 @@
 #include <cstdint>
 
 #include <CLI11/CLI11.hpp>
-
-#include "include/libplatform/libplatform.h"
-#include "include/v8.h"
+#include <v8/include/libplatform/libplatform.h>
+#include <v8/include/v8.h>
 
 #include "utils.h"
 #include "shell.h"
