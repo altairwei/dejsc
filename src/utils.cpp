@@ -53,7 +53,7 @@ void write_file(const std::string &filename, const char *data, const int length)
 
 } // namespace IO
 
-namespace StringUtil {
+namespace StrUtil {
 
 std::string remove_filename_ext(const std::string &filename)
 {
@@ -70,6 +70,6 @@ v8::Local<v8::String> v8_str(const char* x) {
       .ToLocalChecked();
 }
 
-} // namespace StringUtil
+} // namespace StrUtil
 
 } // namespace dejsc

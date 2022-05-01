@@ -58,8 +58,8 @@ void CompileToCache(
     v8::ScriptCompiler::CachedData* cache;
 
     {
-        v8::Local<v8::String> source_string = StringUtil::v8_str(raw_code.c_str());
-        v8::ScriptOrigin script_origin(StringUtil::v8_str(js_filename.c_str()));
+        v8::Local<v8::String> source_string = StrUtil::v8_str(raw_code.c_str());
+        v8::ScriptOrigin script_origin(StrUtil::v8_str(js_filename.c_str()));
         v8::ScriptCompiler::Source source(source_string, script_origin);
         v8::ScriptCompiler::CompileOptions option =
             v8::ScriptCompiler::kNoCompileOptions;
@@ -77,8 +77,8 @@ int RunBytecodeCache(const std::string &cache_filename, v8::Isolate* isolate, v8
     Cache::CachedCode cache(cache_filename);
 
     std::string fake_source(' ', cache.GetSourceHash());
-    v8::Local<v8::String> source_string = StringUtil::v8_str(fake_source.c_str());
-    v8::ScriptOrigin script_origin(StringUtil::v8_str(cache_filename.c_str()));
+    v8::Local<v8::String> source_string = StrUtil::v8_str(fake_source.c_str());
+    v8::ScriptOrigin script_origin(StrUtil::v8_str(cache_filename.c_str()));
     v8::ScriptCompiler::Source source_obj(source_string, script_origin, cache.GetCachedData().get());
     v8::ScriptCompiler::CompileOptions option = v8::ScriptCompiler::kConsumeCodeCache;
 

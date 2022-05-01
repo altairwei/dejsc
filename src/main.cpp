@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     CLI::App* compile_subapp = app.add_subcommand("compile", "Compile JavaScript file into v8 bytenode cache file.");
     compile_subapp->add_option("file", js_filename, "JavaScript file.");
     compile_subapp->callback([&]() {
-        std::string output_file = dejsc::StringUtil::remove_filename_ext(js_filename) + ".jsc";
+        std::string output_file = dejsc::StrUtil::remove_filename_ext(js_filename) + ".jsc";
         std::cout << "writing cache to: " << output_file << std::endl;
         dejsc::Runner::RunInV8([&](v8::Isolate* isolate, v8::Local<v8::Context> &context) -> int {
             dejsc::Runner::CompileToCache(js_filename, output_file, isolate, context);
