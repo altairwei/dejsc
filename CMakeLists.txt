@@ -37,6 +37,7 @@ set(DEJSC_HEADERS
     src/deserializer.h
 )
 
+add_definitions(-DENABLE_DISASSEMBLER -DOBJECT_PRINT)
 add_subdirectory("src/3rdparty/v8-cmake/")
 include_directories("src/3rdparty/v8-cmake/")
 include_directories("src/3rdparty/v8-cmake/v8")

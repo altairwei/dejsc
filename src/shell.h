@@ -14,6 +14,9 @@ int RunMain(v8::Isolate* isolate, v8::Platform* platform, int argc,
 bool ExecuteString(v8::Isolate* isolate, v8::Local<v8::String> source,
                    v8::Local<v8::Value> name, bool print_result,
                    bool report_exceptions);
+bool ExecuteCompiledScript(v8::Isolate* isolate, v8::Local<v8::Context> context,
+                           v8::Local<v8::Script> script,
+                           bool print_result, bool report_exceptions);
 void Print(const v8::FunctionCallbackInfo<v8::Value>& args);
 void Read(const v8::FunctionCallbackInfo<v8::Value>& args);
 void Load(const v8::FunctionCallbackInfo<v8::Value>& args);

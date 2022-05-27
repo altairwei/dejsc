@@ -33,18 +33,20 @@ int main(int argc, char* argv[]) {
 
     std::string jscode;
     std::string cache_filename;
+    bool print_result = false;
     CLI::App* run_subapp = app.add_subcommand("run", "Run JavaScript or v8 bytenode cache file.");
-    run_subapp->add_option("-f,--file", js_filename, "JavaScript or cache file.");
+    run_subapp->add_option("-f,--file", js_filename, "JavaScript file.");
     run_subapp->add_option("-c,--cache", cache_filename, "Use v8 bytenode cache file.");
     run_subapp->add_option("-e,--execute", jscode, "Execute argument given to -e option directly.");
+    run_subapp->add_flag("-p,--print-result", print_result, "Print result of JavaScript expression.");
     run_subapp->callback([&]() {
         dejsc::Runner::RunInV8([&](v8::Isolate* isolate, v8::Local<v8::Context> &context) -> int {
             if (!js_filename.empty()) {
-                return dejsc::Runner::RunJavaScriptFile(js_filename, isolate, context);
+                return dejsc::Runner::RunJavaScriptFile(js_filename, print_result, isolate, context);
             } else if (!jscode.empty()) {
-                return dejsc::Runner::RunJavaScriptCode(jscode, isolate, context);
+                return dejsc::Runner::RunJavaScriptCode(jscode, print_result, isolate, context);
             } else if (!cache_filename.empty()) {
-                return dejsc::Runner::RunBytecodeCache(cache_filename, isolate, context);
+                return dejsc::Runner::RunBytecodeCache(cache_filename, print_result, isolate, context);
             }
         }, true);
     });
@@ -64,6 +66,14 @@ int main(int argc, char* argv[]) {
         v8::ScriptCompiler::CachedData cache(raw.data(), raw.size());
         dejsc::Cache::CachedCode cached_code(&cache);
         cached_code.PrintHeaderInfo();
+    });
+
+    CLI::App* disasm_subapp = app.add_subcommand("disasm", "Disassemble v8 bytenode.");
+    disasm_subapp->add_option("file", cache_filename, "v8 bytenode cache file.");
+    disasm_subapp->callback([&]() {
+        dejsc::Runner::RunInV8([&](v8::Isolate* isolate, v8::Local<v8::Context> &context) -> int {
+            return dejsc::Runner::DisassembleBytecodeCache(cache_filename, isolate, context);
+        }, true);
     });
 
     // Initialize V8.
